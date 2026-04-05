@@ -1,26 +1,137 @@
+/* ── Skill: Dark Mode OLED + Vibrant Block-based ── */
+/* ── Fonts: Russo One (display) + Chakra Petch (body) ── */
+/* ── Colors: Sports palette — #DC2626 red, #FBBF24 gold ── */
+
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: 'Russo One', system-ui, sans-serif;
+  --font-body: 'Chakra Petch', system-ui, sans-serif;
+  --color-bg:        #000000;
+  --color-bg-2:      #0a0a0a;
+  --color-bg-3:      #111111;
+  --color-bg-4:      #1a1a1a;
+  --color-red:       #DC2626;
+  --color-red-b:     #EF4444;
+  --color-gold:      #FBBF24;
+  --color-gold-b:    #FCD34D;
+  --color-muted:     rgba(255,255,255,0.55);
+  --color-border:    rgba(255,255,255,0.07);
+  --color-border-red:rgba(220,38,38,0.25);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #000000;
+  color: #ffffff;
+  font-family: 'Chakra Petch', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
+
+/* Skill: prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* Skill: visible focus rings (keyboard nav) */
+:focus-visible {
+  outline: 2px solid #FBBF24;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Skill: cursor-pointer on clickables */
+button, a, [role="button"] { cursor: pointer; }
+
+/* Skill: min 16px body, line-height 1.5-1.75 */
+p { font-size: 1rem; line-height: 1.75; }
+
+/* Neon glow helpers (OLED dark mode) */
+.glow-red  { text-shadow: 0 0 20px rgba(220,38,38,0.6), 0 0 60px rgba(220,38,38,0.3); }
+.glow-gold { text-shadow: 0 0 20px rgba(251,191,36,0.6), 0 0 60px rgba(251,191,36,0.3); }
+
+/* Animated gradient border */
+.border-animated {
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+.border-animated::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #DC2626, #FBBF24, #DC2626);
+  background-size: 200% 200%;
+  animation: borderSpin 3s linear infinite;
+  z-index: -1;
+}
+@keyframes borderSpin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Scanlines (retro sports bar) */
+.scanlines { position: relative; overflow: hidden; }
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Ticker animation */
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-ticker { animation: ticker 28s linear infinite; }
+
+/* Pulsing glow */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(220,38,38,0.4); }
+  50%       { box-shadow: 0 0 40px rgba(220,38,38,0.8), 0 0 80px rgba(220,38,38,0.3); }
+}
+.pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+
+/* Live dot */
+@keyframes liveDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+.live-dot { animation: liveDot 1.2s ease-in-out infinite; }
+
+/* Float */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
